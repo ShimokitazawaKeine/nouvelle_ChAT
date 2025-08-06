@@ -1,21 +1,47 @@
 from fastapi import FastAPI, Form
-from model.qwen_runner import generate_answer
+from fastapi.middleware.cors import CORSMiddleware
+
 from rag.embedder import embed
 from rag.faiss_index import VectorStore
+from model.qwen_runner import generate_answer
+from model.template import build_prompt
 
-app = FastAPI()
+import numpy as np
 
-store = VectorStore(dim=384)  # MiniLM 维度是 384
+# 初始化 FastAPI 实例
+app = FastAPI(title="RAG with Qwen")
+
+# 允许跨域请求（如前端使用 React/Streamlit 等调用）
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# 加载向量索引（假设已经 build 好）
+store = VectorStore.load("data/index.faiss", "data/passages.json")
 
 @app.post("/ask")
-def ask(question: str = Form(...)):
+def ask_question(question: str = Form(...)):
+    # 向量化问题
     query_vec = embed([question])[0]
-    top_contexts = store.search(query_vec)
+    query_vec = np.array(query_vec).astype("float32")
 
-    prompt = "你是一位专业的问答助手。以下是相关信息：\n"
-    for i, ctx in enumerate(top_contexts):
-        prompt += f"[资料{i+1}]: {ctx}\n"
-    prompt += f"\n请根据上述资料回答：{question}"
+    # 检索最相关的段落（Top-3）
+    top_passages = store.search(query_vec, top_k=3)
 
+    # 构造 prompt
+    prompt = build_prompt(contexts=top_passages, question=question)
+
+    # 调用本地 Qwen 模型生成回答
     answer = generate_answer(prompt)
-    return {"answer": answer}
+
+    # 返回结果
+    return {
+        "question": question,
+        # "prompt": prompt,
+        "answer": answer,
+        "retrieved": top_passages
+    }
