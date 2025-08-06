@@ -41,7 +41,7 @@ def ask_question(question: str = Form(...)):
     # 返回结果
     return {
         "question": question,
-        # "prompt": prompt,
-        "answer": answer,
-        "retrieved": top_passages
+        "prompt": prompt,
+        "answer": answer
+        # "retrieved": top_passages
     }
