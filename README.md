@@ -1,2 +1,2 @@
-#### simple answering bot based on given documents
-For test only, need develop yet
+#### README
+==================施工中======================
