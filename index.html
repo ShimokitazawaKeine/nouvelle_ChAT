@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ask a Question</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px 16px;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background-color: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      margin-bottom: 32px;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      font-size: 1rem;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4A90E2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #3b7cc4;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 16px 0 8px;
+    }
+
+    pre {
+      background-color: #f5f5f5;
+      padding: 16px;
+      border-left: 4px solid #4A90E2;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border-radius: 6px;
+      font-family: Consolas, monospace;
+      overflow-x: auto;
+      max-height: 500px;
+    }
+
+    .field-block {
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Ask a Question</h1>
+
+    <div class="card">
+      <form id="ask-form">
+        <label for="question">Enter your question:</label>
+        <textarea
+          id="question"
+          name="question"
+          required
+          placeholder="e.g., What is LSTM?"
+        ></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+
+    <div id="result" class="card" style="display: none;">
+      <div class="field-block">
+        <div class="section-title">Question</div>
+        <div id="res-question"></div>
+      </div>
+
+      <div class="field-block">
+        <div class="section-title">Prompt</div>
+        <pre id="res-prompt"></pre>
+      </div>
+
+      <div class="field-block">
+        <div class="section-title">Answer</div>
+        <pre id="res-answer"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('ask-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const question = document.getElementById('question').value.trim();
+      if (!question) return;
+
+      const formData = new FormData();
+      formData.append("question", question);
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/ask', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) throw new Error("Request failed");
+
+        const data = await response.json();
+
+        document.getElementById('res-question').textContent = data.question || '';
+        document.getElementById('res-prompt').textContent = data.prompt || '';
+        document.getElementById('res-answer').textContent = data.answer || '';
+
+        document.getElementById('result').style.display = 'block';
+
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    });
+  </script>
+</body>
+</html>

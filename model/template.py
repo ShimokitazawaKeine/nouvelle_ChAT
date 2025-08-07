@@ -12,13 +12,13 @@ def build_prompt(contexts, question):
         str，拼接好的 prompt
     """
 
-    prompt = "/nothinkYou are a professional knowledge-based question answering assistant. Please answer the user's question based on the following context.\n\n"
+    prompt = "/no_think\nYou are an assistant. Please answer the user's question based on the following context.\n\n"
 
     for i, ctx in enumerate(contexts):
         prompt += f"[Context {i + 1}]: {ctx.strip()}\n"
 
     prompt += f"\nUser Question: {question.strip()}\n"
-    prompt += "Final Answer (based only on the context above):"
+    prompt += "Answer:"
 
     return prompt
 
