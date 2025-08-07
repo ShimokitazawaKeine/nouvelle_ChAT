@@ -12,13 +12,16 @@ def build_prompt(contexts, question):
         str，拼接好的 prompt
     """
 
-    prompt = "/no_think\nYou are an assistant. Please answer the user's question based on the following context.\n\n"
+    prompt = "你是一个知识库问答助手，请根据下面的[Context]作为辅助回答用户的问题。请不要进行思考，请直接输出你的答案。\n\n"
 
     for i, ctx in enumerate(contexts):
         prompt += f"[Context {i + 1}]: {ctx.strip()}\n"
 
-    prompt += f"\nUser Question: {question.strip()}\n"
-    prompt += "Answer:"
+    prompt += f"\n用户问题: {question.strip()}\n"
+
+    prompt += "当你正式开始回答时，请仅输出一条 'Answer:' 开头的内容。 "
+
+    prompt += "你的回答（以 Answer: 开头）："
 
     return prompt
 

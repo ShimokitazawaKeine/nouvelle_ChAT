@@ -1,12 +1,13 @@
 from llama_cpp import Llama
 
-llm = Llama(model_path="model\gguf\Qwen3-0.6B-Q8_0.gguf", n_ctx=2048)
+llm = Llama(model_path="model\gguf\Qwen3-4B-Q5_K_M.gguf", n_ctx=2048)
 
 def generate_answer(prompt):
     response = llm(
         prompt=prompt,
-        max_tokens=128,
-        temperature=0,
+        max_tokens=512,
+        temperature=0.8,
         stop=["<|im_end|>"]
     )
-    return response["choices"][0]["text"].strip()
+    # return response["choices"][0]["text"].strip()
+    return response
