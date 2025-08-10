@@ -11,6 +11,8 @@ import numpy as np
 # 初始化 FastAPI 实例
 app = FastAPI(title="RAG with Qwen")
 
+EMBED_DIM = 384
+
 # 允许跨域请求（如前端使用 React/Streamlit 等调用）
 app.add_middleware(
     CORSMiddleware,
@@ -21,7 +23,8 @@ app.add_middleware(
 )
 
 # 加载向量索引（假设已经 build 好）
-store = VectorStore.load("data/index.faiss", "data/passages.json")
+
+store = VectorStore.load("data/index.faiss", "data/passages.json", dim=EMBED_DIM, metric="cosine")
 
 @app.post("/ask")
 def ask_question(question: str = Form(...)):
