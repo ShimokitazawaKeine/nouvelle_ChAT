@@ -6,8 +6,12 @@ def generate_answer(prompt):
     response = llm(
         prompt=prompt,
         max_tokens=512,
-        temperature=0.8,
-        stop=["<|im_end|>"]
+        temperature=0.5,
+
+        # repeat_penalty=1.1,
+        # logit_bias={int(nl_id): -2.0},
+
+        stop=["<END>"]
     )
     # return response["choices"][0]["text"].strip()
     return response

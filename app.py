@@ -35,10 +35,12 @@ def ask_question(question: str = Form(...)):
     # 构造 prompt
     prompt = build_prompt(contexts=top_passages, question=question)
 
+    # print(prompt)
     print(prompt)
 
     # 调用本地 Qwen 模型生成回答
     answer = generate_answer(prompt)
+    # answer = generate_answer(question)  # 测试prompt, 更方便调试。
 
     print(answer)
 

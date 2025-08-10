@@ -12,16 +12,30 @@ def build_prompt(contexts, question):
         str，拼接好的 prompt
     """
 
-    prompt = "你是一个知识库问答助手，请根据下面的[Context]作为辅助回答用户的问题。请不要进行思考，请直接输出你的答案。\n\n"
-
+    prompt ="""
+[系统规则]
+你是严格的检索问答助手。
+你必须严格基于下面的资料作答，不得使用任何资料之外的信息。
+不得自行扩写、改写或推断资料中未给出的信息。
+尽可能使用资料中的原句作答。
+如果资料不足，回答{"资料不足。"}
+最终答案不少于250字。
+    
+[输出规范]
+1. 严禁输出推理过程、思考、链路、草稿、Self-Consistency、CoT 等任何中间内容。
+2. 只输出“最终答案”字段。
+3. 最多用 1000 汉字；若无法在限长内完整回答，优先给结论，省略解释。
+4. 结尾必须输出字符串：<END>
+    
+[资料]
+    """
     for i, ctx in enumerate(contexts):
         prompt += f"[Context {i + 1}]: {ctx.strip()}\n"
 
-    prompt += f"\n用户问题: {question.strip()}\n"
+    prompt += f"\n[用户问题]\n {question.strip()}\n"
 
-    prompt += "当你正式开始回答时，请仅输出一条 'Answer:' 开头的内容。 "
-
-    prompt += "你的回答（以 Answer: 开头）："
+    prompt += "\n[最终答案]\n"
 
     return prompt
+
 
