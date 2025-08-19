@@ -1,17 +1,19 @@
-from llama_cpp import Llama
-
-llm = Llama(model_path="model\gguf\Qwen3-4B-Q5_K_M.gguf", n_ctx=2048)
+from openai import OpenAI
+client = OpenAI()
 
 def generate_answer(prompt):
-    response = llm(
-        prompt=prompt,
-        max_tokens=512,
-        temperature=0.5,
+    # response = llm(
+    #     prompt=prompt,
+    #     max_tokens=512,
+    #     temperature=0.5,
+    #     stop=["<END>"]
+    # )
 
-        # repeat_penalty=1.1,
-        # logit_bias={int(nl_id): -2.0},
 
-        stop=["<END>"]
+    response = client.responses.create(
+        model = "gpt-5-nano-2025-08-07",
+        input = prompt,
+        # stop = ["<END>"]
     )
-    # return response["choices"][0]["text"].strip()
     return response
+
