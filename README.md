@@ -19,3 +19,5 @@ frontend: run `python -m http.server 8001` in another terminal.
 
 
 未完成：openai.api、长对话的prompt构建、树状长对话prompt构建、前端
+
+8.22 update: openai.api 已经可运行
