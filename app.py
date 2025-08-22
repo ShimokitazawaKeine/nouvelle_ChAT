@@ -47,7 +47,8 @@ def ask_question(question: str = Form(...)):
 
     print(answer)
 
-    answer = answer["choices"][0]["text"].strip()
+    # answer = answer["choices"][0]["text"].strip() # 此为本地部署的输出处理
+    answer = answer.output[1].content[0].text
 
     # 返回结果
     return {
