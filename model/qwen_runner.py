@@ -1,5 +1,5 @@
 from openai import OpenAI
-client = OpenAI(api_key = "KEYHERE")
+client = OpenAI()
 
 def generate_answer(prompt):
     # response = llm(
